@@ -1,57 +1,230 @@
-# Template para projetos Java usando o Visual Studio Code
+# 7.4 // Generalização, Especialização e Polimorfismo // RPG
 
-Um _template_ é um projeto base, para não iniciar do zero e ter pelo menos uma estrutura mínima onde se apoiar.
+Use este link do GitHub Classroom para ter sua cópia alterável deste repositório: <>
 
-Antes de começar a desenvolver com este _template_ é necessário ter instalado o Java Software Development Kit (JDK), o editor Visual Studio Code (VSCode) e o utilitário de controle de versão de código _Git_.
+Implementar respeitando os fundamentos de Orientação a Objetos.
 
+**Tópicos desta atividade:** generalização, super classes, classes abstratas, especialização, classes concretas e polimorfismo.
 
+---
 
-## Instalação e Configuração do JDK
-
-É necessário instalar o JDK a partir da versão 8, porém é recomendada versão 11-LTS (Long Term Support - suporte de longo prazo) ou até mesmo a 17-LTS.
-
-Para o Sistema Operacional (SO) Windows, ele pode ser obtido aqui <https://adoptium.net/?variant=openjdk11&jvmVariant=hotspot>. Siga as instruções de instalação e não esqueça de selecionar os opcionais durante o processo, especialmente a parte ⚠️ _"add Java to PATH"_.
-
-Para Sistemas Operacionais Linux/Debian, como Ubuntu, Pop OS, Mint, Elementary, etc, execute no terminal o comando `sudo apt install openjdk-11-jdk`, que a mágica vai acontecer.
-
-Para testar a instalação, seja no Windows ou Linux, abra o _Prompt_ de Comando (cmd) ou o Terminal e execute o compilador Java com `javac -version`. A saída deve ser algo com `javac 11.0.9.1`, ou outra versão.
+As regras apresentadas nos casos de teste aprensentam conceitos de herança e agregação. Algumas classes são estendidas (`extends`) subclassificando comportamentos padrão e outras são agregadas e desagregadas (associações temporárias). Cada objeto tem características próprias. A classe `Personagem` e suas subclasses não podem estar acopladas (fazer menção) as classes concretas de `Escudo` e `Arma`, tais como `EscudoFerro`, ..., `Martelo`, ..., porém podem ter referência às classes abstratas `Escudo` e `Arma`. Vale o mesmo para as classes novas que forem criadas. Considere os seguintes casos de teste:
 
 
+```java
+Personagem ogro = new Ogro();
+Personagem arqueiro = new Arqueiro();
+Personagem feiticeira = new Feiticeira();
 
-## Instalação e Configuração do Visual Studio Code (VSCode)
+// cada personagem se destaca em certa habilidade
+// somado sempre 10
+System.out.println(ogro.getForca() == 7);
+System.out.println(ogro.getPontaria() == 2);
+System.out.println(ogro.getMagica() == 1);
 
-O VSCode pode ser obtido aqui: <https://code.visualstudio.com/download>. A instalação é semelhante nos Sistemas Operacionais Windows e Linux.
+System.out.println(arqueiro.getForca() == 3);
+System.out.println(arqueiro.getPontaria() == 5);
+System.out.println(arqueiro.getMagica() == 2);
 
-No Windows, abra o instalador e não esqueça de selecionar todos os opcionais, como _adicionar code ao path_ e _adicionar "abrir com code" ao menu_, por exemplo.
+System.out.println(feiticeira.getForca() == 2);
+System.out.println(feiticeira.getPontaria() == 2);
+System.out.println(feiticeira.getMagica() == 6);
 
-No Linux, abra o arquivo `.deb` baixado no gerenciador de pacotes e instale normalmente conforme instruções de seu sistema operacional.
+Personagem[] personagens = new Personagem[]{ogro,arqueiro,feiticeira};
 
-Este _template_ possui uma pasta [.vscode](.vscode) com as extensões necessárias em [extensions.json](.vscode/extensions.json) e as configurações recomendadas em [settings.json](.vscode/settings.json) para um **ambiente de ensino** (configuração didática). Fique a vontade para alterá-los como achar melhor.
+System.out.println(ogro.toString().equals("Ogro sem escudo e desarmado"));
+System.out.println(arqueiro.toString().equals("Arqueiro sem escudo e desarmado"));
+System.out.println(feiticeira.toString().equals("Feiticeira sem escudo e desarmada"));
 
-A única extensão obrigatória é a _"vscjava.vscode-java-pack"_.
+// todos os personagens partem com 100% de saúde, sem armas e escudos
+for (Personagem p : personagens) System.out.println(p.getSaude() == 100);
+for (Personagem p : personagens) System.out.println(p.estaVivo() == true);
+for (Personagem p : personagens) System.out.println(p.getArmaPrincipal() == null);
+for (Personagem p : personagens) System.out.println(p.getArmaSecundaria() == null);
+for (Personagem p : personagens) System.out.println(p.getEscudo() == null);
 
-A extensão _"EditorConfig"_ é bastante recomendada. Ela funciona junto com o arquivo [.editorconfig](.editorconfig) presente neste _template_ para padronizar a formatação dos códigos-fonte.
+// três exemplares de armas
+Arma martelo  = new Martelo();
+Arma arco     = new Arco();
+Arma poMagico = new PoMagico();
 
-Finalmente, se preferes o editor em Português, instale a extensão _Portuguese (Brazil) Language Pack for Visual Studio Code_.
+// cada arma causa certo dano // sempre entre 10 e 20
+System.out.println(martelo.getDano() == 19);
+System.out.println(arco.getDano() == 13);
+System.out.println(poMagico.getDano() == 15);
+
+// personagem pega uma arma
+ogro.pegaArma(martelo);
+
+// sempre é principal
+System.out.println(ogro.getArmaPrincipal() == martelo);
+System.out.println(ogro.getArmaSecundaria() == null);
+System.out.println(ogro.toString().equals("Ogro sem escudo e armado com Martelo"));
+
+// não pode pegar duas vezes a mesma arma
+ogro.pegaArma(martelo);
+
+System.out.println(ogro.getArmaPrincipal() == martelo);
+System.out.println(ogro.getArmaSecundaria() == null);
+
+// como não há arma secundária não pode trocar
+ogro.trocaArma();
+
+System.out.println(ogro.getArmaPrincipal() == martelo);
+System.out.println(ogro.getArmaSecundaria() == null);
+
+// pode pegar outra arma que passa a ser a principal
+ogro.pegaArma(arco);
+
+System.out.println(ogro.getArmaPrincipal() == arco);
+System.out.println(ogro.getArmaSecundaria() == martelo);
+System.out.println(ogro.toString().equals("Ogro sem escudo e armado com Arco"));
+
+// com duas armas pode-se inverter
+ogro.trocaArma();
+
+System.out.println(ogro.getArmaPrincipal() == martelo);
+System.out.println(ogro.getArmaSecundaria() == arco);
+
+// sempre é largada a principal e a secundária passa para principal
+ogro.largaArma();
+
+System.out.println(ogro.getArmaPrincipal() == arco);
+System.out.println(ogro.getArmaSecundaria() == null);
+
+// pode largar todas as armas (sem armas não muda o estado)
+ogro.largaArma();
+
+System.out.println(ogro.getArmaPrincipal() == null);
+System.out.println(ogro.getArmaSecundaria() == null);
+
+// sem arma não faz diferença
+ogro.largaArma();
+
+System.out.println(ogro.getArmaPrincipal() == null);
+System.out.println(ogro.getArmaSecundaria() == null);
+
+// Ogro equipado com Martelo
+ogro.pegaArma(arco);
+ogro.pegaArma(martelo);
+
+System.out.println(ogro.getArmaPrincipal() == martelo);
+System.out.println(ogro.getArmaSecundaria() == arco);
+
+// Personagem ataca outro
+System.out.println(arqueiro.getSaude() == 100);
+ogro.ataca(arqueiro);
+
+// Ogro causa 70% de dano 19 do Martelo
+// sempre arrendondado para cima: 0.7 * 19 = 13.3 = 14
+// logo Arqueiro cai 14 em saúde
+System.out.println(arqueiro.getSaude() == 86);
+ogro.trocaArma(); // Ogro está com Arco agora
+ogro.ataca(arqueiro);
+
+// Ogro causa 20% de dano 13 do Arco: 0.2 * 13 = 2.6 = 3
+// logo Arqueiro cai 3 em saúde
+System.out.println(arqueiro.getSaude() == 83);
+
+// impossível pergar arma 1, já está com outro Personagem
+System.out.println(arqueiro.estaDesarmado() == true);
+arqueiro.pegaArma(martelo);
+System.out.println(arqueiro.getArmaPrincipal() == null);
+System.out.println(arqueiro.getArmaSecundaria() == null);
+System.out.println(arqueiro.estaDesarmado() == true);
+
+// a arma 3 está disponível
+arqueiro.pegaArma(poMagico);
+System.out.println(arqueiro.estaDesarmado() == false);
+System.out.println(arqueiro.getArmaPrincipal() == poMagico);
+System.out.println(arqueiro.getArmaSecundaria() == null);
+System.out.println(arqueiro.toString().equals("Arqueiro sem escudo e armado com Pó Mágico"));
+
+// os escudos
+Escudo escudoFerro = new EscudoFerro();
+Escudo escudoMadeira = new EscudoMadeira();
+Escudo escudoMagico = new EscudoMagico();
+
+System.out.println(escudoFerro.getTaxaAbsorcao() == 5); // absorve 50% impacto
+System.out.println(escudoMadeira.getTaxaAbsorcao() == 6); // absorve 60% impacto
+System.out.println(escudoMagico.getTaxaAbsorcao() == 7); // absorve 70% impacto
+
+// todos são íntegros inicialmente
+System.out.println(escudoFerro.getIntegridade() == 100);
+System.out.println(escudoMadeira.getIntegridade() == 100);
+System.out.println(escudoMagico.getIntegridade() == 100);
+
+// taxa de deriorização (queda da integridade com a força do impacto)
+System.out.println(escudoFerro.getTaxaDeteriorizacao() == 5); // deteriora 150% do dano
+System.out.println(escudoMadeira.getTaxaDeteriorizacao() == 7); // deteriora 170% do dano
+System.out.println(escudoMagico.getTaxaDeteriorizacao() == 10); // deteriora 200% do dano
+
+// nenhum personagem têm escudo inicialmente
+for (Personagem p : personagens) System.out.println(p.getEscudo() == null);
+
+// personagem pega escudo
+System.out.println(ogro.getEscudo() == null);
+ogro.pegaEscudo(escudoFerro);
+System.out.println(ogro.getEscudo() == escudoFerro);
+System.out.println(ogro.toString().equals("Ogro com Escudo de Ferro e armado com Arco"));
+
+// outro personagem não pode pegar o mesmo escudo
+System.out.println(feiticeira.getEscudo() == null);
+feiticeira.pegaEscudo(escudoFerro);
+System.out.println(feiticeira.getEscudo() == null);
+
+// personagem larga escudo
+System.out.println(ogro.getEscudo() == escudoFerro);
+ogro.largaEscudo();
+System.out.println(ogro.getEscudo() == null);
+
+// agora outro pode pegar
+System.out.println(feiticeira.getEscudo() == null);
+feiticeira.pegaEscudo(escudoFerro);
+System.out.println(feiticeira.getEscudo() == escudoFerro);
+
+// Ogro ataca (com Arco) Feiticeira (com Escudo de Ferro)
+// Ogro causa 20% de dano 13 do Arco: 0.2 * 13 = 2.6 = DANO == 3
+// Como Feiticeira tem um Escudo de Ferro que absorve 50%,
+// recebe 50% do Dano 3 = 1.5
+// quando há escudo sempre arredonda para baixo, caindo 1 em saúde
+ogro.ataca(feiticeira);
+System.out.println(feiticeira.getSaude() == 99);
+
+// o Escudo de Ferro deteriora 150% do Dano esperado de 3
+// 1.5 * 3 = 4.5 = 5 (arredonda para cima sempre)
+// decaíndo 5 pontos de integridade no escudo
+System.out.println(feiticeira.getEscudo().getIntegridade() == 95);
+
+// simulando batalha
+Arma[] armas = new Arma[]{martelo, arco, poMagico};
+Escudo[] escudos = new Escudo[]{escudoFerro, escudoMagico, escudoMagico};
+int personagensVivos = personagens.length;
+Personagem vencedor = null;
+while (personagensVivos > 1) {
+  Personagem p1 = personagens[(int)(Math.random() * personagens.length)];
+  Personagem p2 = p1;
+  while (p1 == p2) p2 = personagens[(int)(Math.random() * personagens.length)];
+  p1.ataca(p2);
+  if (Math.random() < 0.5) p1.largaArma(); // chance de 50% de largar a arma
+  if (Math.random() < 0.5) p2.largaArma();
+  if (Math.random() < 0.5) p1.pegaArma(armas[(int)(Math.random() * armas.length)]);
+  if (Math.random() < 0.5) p2.pegaArma(armas[(int)(Math.random() * armas.length)]);
+  if (Math.random() < 0.5) p1.largaEscudo();
+  if (Math.random() < 0.5) p2.largaEscudo();
+  if (Math.random() < 0.5) p1.pegaEscudo(escudos[(int)(Math.random() * escudos.length)]);
+  if (Math.random() < 0.5) p2.pegaEscudo(escudos[(int)(Math.random() * escudos.length)]);
+  personagensVivos = 0;
+  for (Personagem p : personagens) if (p.estaVivo()) {
+    vencedor = p;
+    personagensVivos++;
+  }
+}
+System.out.println(vencedor);
+
+```
 
 
-
-## Instalação e Configuração do Git
-
-O Git para Windows pode ser obtido neste link: <https://git-scm.com/download/win>. A instalação é simples e intuitiva. Como sempre, não esqueça dos opcionais, principalmente a opção _adicionar o git ao path_!
-
-Para Linux, o comando `sudo apt install git` no terminal faz tudo.
-
-Para verificar a instalação abra o _prompt_ ou um terminal e execute `git --version`. Se não acusou _"comando não encontrado"_ é porque está tudo funcionando perfeitamente.
+Implementar novas classes de objetos que realizem alguma interação no jogo. É necessário especificar pelo menos uma nova superclasse com pelo menos três filhas. Também é necessário definir novas agregações e suas regras. Além disso, também escrever os testes que mostrem o comportamento e estado esperado quando esses novos objetos são criados e usados, mostrando o estado a cada interação.
 
 
-
-## Códigos-fonte
-
-Considere adicionar os arquivos de código-fonte `.java` no diretório [src](./src/), como o exemplo [src/App.java](./src/App.java).
-
-
-
-## Licenciamento
-
-Este _template_ é _open source_ licenciado sob a GPL, assim como todos os projetos derivados dele. Mais detalhes em [LICENÇA.md](LICENÇA.md).

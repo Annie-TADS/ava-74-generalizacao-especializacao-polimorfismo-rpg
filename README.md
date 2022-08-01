@@ -1,6 +1,6 @@
 # 7.4 // Generalização, Especialização e Polimorfismo // RPG
 
-Use este link do GitHub Classroom para ter sua cópia alterável deste repositório: <>
+Use este link do GitHub Classroom para ter sua cópia alterável deste repositório: <https://classroom.github.com/a/hX1Fu_GJ>
 
 Implementar respeitando os fundamentos de Orientação a Objetos.
 
